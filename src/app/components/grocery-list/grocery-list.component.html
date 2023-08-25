@@ -1,0 +1,65 @@
+<app-grocery-header [total]="getTotal()" />
+
+<div>
+  <h1>Template driven form</h1>
+
+  <form (ngSubmit)="onSubmit(myform)" #myform="ngForm">
+    Name:
+    <input type="text" name="name" ngModel required #name="ngModel" />
+    <br />
+    <div *ngIf="name.invalid && name.touched">Name is required</div>
+
+    Quantity: <input type="text" name="quantity" ngModel required /> <br />
+    <input type="submit" [disabled]="myform.invalid" value="Add Grocery" />
+  </form>
+
+  <div>
+    <h1>Reactive form</h1>
+
+    <form [formGroup]="groceryForm" (ngSubmit)="onSubmit2()">
+      Name: <input id="name" type="text" formControlName="name" /> <br />
+      <div *ngIf="groceryForm.get('name')?.invalid">Name is required</div>
+      <!-- <p>{{ groceryForm.controls.name.errors | json }}</p> -->
+      Quantity: <input type="text" formControlName="quantity" /> <br />
+      <input
+        type="submit"
+        value="Add Grocery"
+        [disabled]="!groceryForm.valid"
+      />
+    </form>
+
+    <div *ngFor="let g of grocery">
+      <app-grocery-item
+        [gi]="g"
+        (delete)="deleteGrocery($event)"
+      ></app-grocery-item>
+    </div>
+
+    <div>
+      Search <input type="text" [(ngModel)]="searchValue" />
+      <span>your searched for "{{ searchValue }}"</span>
+    </div>
+    <div *ngFor="let g of grocery">
+      <div
+        *ngIf="searchValue === '' || g.name.toLowerCase().includes(searchValue)"
+      >
+        <h3>
+          {{ g.name }} - {{ g.id
+          }}<button (click)="deleteGrocery(g.id)">X</button>
+        </h3>
+        <p [ngStyle]="{ color: g.quantity > 5 ? 'green' : 'red' }">
+          <button (click)="quantityChange(g.id, 1)">+</button>{{ g.quantity
+          }}<button (click)="quantityChange(g.id, -1)">-</button>
+        </p>
+
+        <br />
+      </div>
+    </div>
+    <!-- <div>
+  <input type="text" [(ngModel)]="searchValue" />
+  <span>your searched for "{{ searchValue }}"</span>
+</div>
+<button (click)="sayHello()">Say Hello</button>
+<img [src]="imagePath" width="200" height="200" /> -->
+  </div>
+</div>

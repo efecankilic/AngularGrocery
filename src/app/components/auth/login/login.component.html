@@ -1,0 +1,14 @@
+<h2>Login</h2>
+{{ errorMessage }}
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  Email: <input formControlName="email" type="text" /><br />
+  <span
+    style="color: red"
+    *ngIf="!loginForm.get('email')?.valid && loginForm.get('email')?.touched"
+  >
+    email format is required
+  </span>
+
+  password : <input formControlName="password" type="password" /><br />
+  <input type="submit" value="Login" />
+</form>
